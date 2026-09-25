@@ -1,0 +1,448 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>تأكيد رقم الهاتف - متجري</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛍️</text></svg>"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      .verify-page {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 2rem 1rem;
+      }
+
+      .verify-card {
+        background: white;
+        padding: 3rem 2.5rem;
+        border-radius: 20px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        width: 100%;
+        max-width: 550px;
+        animation: slideUp 0.5s ease;
+      }
+
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .verify-card .logo {
+        text-align: center;
+        font-size: 3rem;
+        color: #667eea;
+        margin-bottom: 1rem;
+      }
+
+      .verify-card h1 {
+        text-align: center;
+        color: #1a1a2e;
+        margin-bottom: 0.5rem;
+        font-size: 1.8rem;
+      }
+
+      .verify-card .subtitle {
+        text-align: center;
+        color: #999;
+        margin-bottom: 2rem;
+        font-size: 0.95rem;
+      }
+
+      .info-box {
+        background: #e8f4f8;
+        padding: 1rem;
+        border-radius: 12px;
+        margin-bottom: 1.5rem;
+        border-right: 4px solid #17a2b8;
+        color: #0c5460;
+        font-size: 0.9rem;
+        line-height: 1.6;
+      }
+
+      .info-box i {
+        color: #17a2b8;
+        margin-left: 0.3rem;
+      }
+
+      /* حالة الانتظار */
+      .waiting-state {
+        text-align: center;
+        padding: 2rem 1rem;
+      }
+
+      .waiting-icon {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(135deg, #ffc107, #ff9800);
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        margin: 0 auto 1.5rem;
+        animation: pulse 2s infinite;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          transform: scale(1);
+          box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.7);
+        }
+        50% {
+          transform: scale(1.05);
+          box-shadow: 0 0 0 20px rgba(255, 193, 7, 0);
+        }
+      }
+
+      .waiting-state h3 {
+        color: #1a1a2e;
+        margin-bottom: 0.5rem;
+        font-size: 1.3rem;
+      }
+
+      .waiting-state p {
+        color: #666;
+        line-height: 1.8;
+        margin-bottom: 1.5rem;
+      }
+
+      .waiting-animation {
+        display: flex;
+        justify-content: center;
+        gap: 0.5rem;
+      }
+
+      .waiting-animation span {
+        width: 12px;
+        height: 12px;
+        background: #667eea;
+        border-radius: 50%;
+        animation: bounce 1.4s infinite ease-in-out;
+      }
+
+      .waiting-animation span:nth-child(1) {
+        animation-delay: -0.32s;
+      }
+      .waiting-animation span:nth-child(2) {
+        animation-delay: -0.16s;
+      }
+
+      @keyframes bounce {
+        0%,
+        80%,
+        100% {
+          transform: scale(0);
+          opacity: 0.5;
+        }
+        40% {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+
+      /* حالة إدخال الكود */
+      .code-state {
+        padding: 1rem 0;
+      }
+
+      .code-state h3 {
+        text-align: center;
+        color: #1a1a2e;
+        margin-bottom: 1rem;
+        font-size: 1.1rem;
+      }
+
+      .code-inputs {
+        display: flex;
+        justify-content: center;
+        gap: 0.8rem;
+        margin: 1.5rem 0;
+        direction: ltr;
+      }
+
+      .code-input {
+        width: 50px;
+        height: 60px;
+        text-align: center;
+        font-size: 1.8rem;
+        font-weight: bold;
+        border: 2px solid #e0e0e0;
+        border-radius: 12px;
+        outline: none;
+        transition: all 0.3s;
+        font-family: monospace;
+        text-transform: uppercase;
+      }
+
+      .code-input:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        transform: scale(1.05);
+      }
+
+      .code-input.filled {
+        background: #e8f0fe;
+        border-color: #667eea;
+      }
+
+      .code-error {
+        background: #f8d7da;
+        color: #721c24;
+        padding: 0.8rem;
+        border-radius: 10px;
+        text-align: center;
+        margin-bottom: 1rem;
+        font-size: 0.9rem;
+        border-right: 4px solid #dc3545;
+      }
+
+      .verify-btn {
+        width: 100%;
+        padding: 1.1rem;
+        background: linear-gradient(135deg, #28a745, #20c997);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-size: 1.05rem;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-family: inherit;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        margin-bottom: 0.8rem;
+      }
+
+      .verify-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(40, 167, 69, 0.4);
+      }
+
+      .verify-btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .resend-btn {
+        width: 100%;
+        padding: 0.9rem;
+        background: white;
+        color: #667eea;
+        border: 2px solid #667eea;
+        border-radius: 12px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-family: inherit;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+      }
+
+      .resend-btn:hover {
+        background: #667eea;
+        color: white;
+      }
+
+      /* حالة النجاح */
+      .success-state {
+        text-align: center;
+        padding: 2rem 1rem;
+      }
+
+      .success-icon {
+        width: 100px;
+        height: 100px;
+        background: linear-gradient(135deg, #28a745, #20c997);
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3rem;
+        margin: 0 auto 1.5rem;
+        animation: popIn 0.5s ease;
+      }
+
+      @keyframes popIn {
+        0% {
+          transform: scale(0);
+        }
+        70% {
+          transform: scale(1.1);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+
+      .success-state h3 {
+        color: #28a745;
+        margin-bottom: 0.5rem;
+        font-size: 1.5rem;
+      }
+
+      .success-state p {
+        color: #666;
+      }
+
+      .logout-link {
+        text-align: center;
+        margin-top: 1.5rem;
+      }
+
+      .logout-link a {
+        color: #999;
+        text-decoration: none;
+        font-size: 0.9rem;
+        cursor: pointer;
+      }
+
+      .logout-link a:hover {
+        color: #e94560;
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="verify-page">
+      <div class="verify-card">
+        <div class="logo">
+          <i class="fas fa-shield-alt"></i>
+        </div>
+        <h1>تأكيد رقم الهاتف</h1>
+        <p class="subtitle">خطوة أخيرة لتفعيل حسابك</p>
+
+        <div class="info-box">
+          <i class="fas fa-info-circle"></i>
+          سيتم إرسال كود التحقق إلى رقمك على WhatsApp خلال دقائق
+        </div>
+
+        <!-- حالة: في انتظار الإرسال -->
+        <div id="waitingState" class="waiting-state">
+          <div class="waiting-icon">
+            <i class="fas fa-hourglass-half"></i>
+          </div>
+          <h3>في انتظار كود التحقق</h3>
+          <p>
+            سيصلك الكود على رقمك:
+            <strong id="waitingPhone" style="color: #667eea">-</strong>
+            <br />
+            <small style="color: #999">عادةً خلال 2-5 دقائق</small>
+          </p>
+          <div class="waiting-animation">
+            <span></span><span></span><span></span>
+          </div>
+        </div>
+
+        <!-- حالة: إدخال الكود -->
+        <div id="codeState" class="code-state" style="display: none">
+          <h3>
+            <i class="fas fa-envelope-open-text" style="color: #667eea"></i>
+            أدخل الكود الذي وصلك
+          </h3>
+
+          <div class="code-inputs" id="codeInputs">
+            <input
+              type="text"
+              maxlength="1"
+              class="code-input"
+              data-index="0"
+              autocomplete="off"
+            />
+            <input
+              type="text"
+              maxlength="1"
+              class="code-input"
+              data-index="1"
+              autocomplete="off"
+            />
+            <input
+              type="text"
+              maxlength="1"
+              class="code-input"
+              data-index="2"
+              autocomplete="off"
+            />
+            <input
+              type="text"
+              maxlength="1"
+              class="code-input"
+              data-index="3"
+              autocomplete="off"
+            />
+            <input
+              type="text"
+              maxlength="1"
+              class="code-input"
+              data-index="4"
+              autocomplete="off"
+            />
+            <input
+              type="text"
+              maxlength="1"
+              class="code-input"
+              data-index="5"
+              autocomplete="off"
+            />
+          </div>
+
+          <div id="codeError" class="code-error" style="display: none"></div>
+
+          <button id="verifyBtn" class="verify-btn" onclick="verifyCode()">
+            <i class="fas fa-check-circle"></i> تأكيد الرقم
+          </button>
+
+          <button class="resend-btn" onclick="resendRequest()">
+            <i class="fas fa-redo"></i> لم يصلني الكود
+          </button>
+        </div>
+
+        <!-- حالة: تم التحقق -->
+        <div id="successState" class="success-state" style="display: none">
+          <div class="success-icon">
+            <i class="fas fa-check"></i>
+          </div>
+          <h3>🎉 تم التحقق بنجاح!</h3>
+          <p>جاري تحويلك للمتجر...</p>
+        </div>
+
+        <div class="logout-link">
+          <a onclick="logout()">تسجيل الخروج</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+    <script src="firebase-config.js"></script>
+    <script src="verify.js"></script>
+  </body>
+</html>

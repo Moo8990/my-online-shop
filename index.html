@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>متجري الإلكتروني</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛍️</text></svg>"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <!-- ============================================
+         شريط التنقل
+         ============================================ -->
+    <nav class="navbar">
+      <div class="logo"><i class="fas fa-store"></i> متجري</div>
+
+      <div class="search-box">
+        <i class="fas fa-search"></i>
+        <input type="text" id="searchInput" placeholder="ابحث عن منتج..." />
+      </div>
+
+      <div class="nav-actions">
+        <button
+          class="theme-toggle"
+          id="themeToggle"
+          title="تبديل الوضع الليلي"
+        >
+          <i class="fas fa-moon"></i>
+        </button>
+
+        <div class="wishlist-icon" id="wishlistIcon">
+          <i class="fas fa-heart"></i>
+          <span id="wishlistCount">0</span>
+        </div>
+        <div class="cart-icon" id="cartIcon">
+          <i class="fas fa-shopping-cart"></i>
+          <span id="cartCount">0</span>
+        </div>
+
+        <!-- قسم المستخدم -->
+        <div class="user-section" id="userSection">
+          <div class="user-menu hidden" id="userMenu">
+            <div class="user-info" id="userInfoBtn">
+              <i class="fas fa-user-circle"></i>
+              <span id="userName">مستخدم</span>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="user-dropdown" id="userDropdown">
+              <a href="account.html"> <i class="fas fa-user"></i> حسابي </a>
+              <a href="orders.html"> <i class="fas fa-box"></i> طلباتي </a>
+              <a href="admin.html" id="adminLink" class="hidden">
+                <i class="fas fa-cog"></i> لوحة التحكم
+              </a>
+              <a href="#" id="logoutBtn">
+                <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
+              </a>
+            </div>
+          </div>
+          <a href="login.html" class="login-link hidden" id="loginLink">
+            <i class="fas fa-sign-in-alt"></i> دخول
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- ============================================
+         قسم البطل
+         ============================================ -->
+    <header class="hero">
+      <div class="hero-content">
+        <h1>مرحباً بكم في متجري</h1>
+        <p>أفضل المنتجات بأفضل الأسعار - توصيل سريع لجميع المحافظات</p>
+        <button
+          class="cta-btn"
+          onclick="
+            document
+              .getElementById('products')
+              .scrollIntoView({ behavior: 'smooth' })
+          "
+        >
+          تسوق الآن <i class="fas fa-arrow-left"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- ============================================
+         الفئات
+         ============================================ -->
+    <section class="categories">
+      <h2>تسوق حسب الفئة</h2>
+      <div class="categories-grid">
+        <div class="category-card active" data-category="all">
+          <i class="fas fa-th"></i>
+          <span>الكل</span>
+        </div>
+        <div class="category-card" data-category="electronics">
+          <i class="fas fa-mobile-alt"></i>
+          <span>إلكترونيات</span>
+        </div>
+        <div class="category-card" data-category="clothing">
+          <i class="fas fa-tshirt"></i>
+          <span>ملابس</span>
+        </div>
+        <div class="category-card" data-category="accessories">
+          <i class="fas fa-clock"></i>
+          <span>إكسسوارات</span>
+        </div>
+        <div class="category-card" data-category="home">
+          <i class="fas fa-home"></i>
+          <span>منزل</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================
+         المنتجات
+         ============================================ -->
+    <section class="products-section" id="products">
+      <h2>منتجاتنا</h2>
+      <div class="products-container" id="productsContainer"></div>
+      <div id="noResults" class="no-results" style="display: none">
+        <i class="fas fa-search"></i>
+        <p>لا توجد منتجات مطابقة لبحثك</p>
+      </div>
+    </section>
+
+    <!-- ============================================
+         نافذة السلة
+         ============================================ -->
+    <div class="cart-modal" id="cartModal">
+      <div class="cart-content">
+        <div class="cart-header">
+          <h2><i class="fas fa-shopping-cart"></i> سلة التسوق</h2>
+          <button id="closeCart" class="close-x">&times;</button>
+        </div>
+        <div id="cartItems"></div>
+        <div class="cart-total">
+          <strong>الإجمالي: $<span id="cartTotal">0.00</span></strong>
+        </div>
+        <button id="checkoutBtn" class="checkout-btn">
+          <i class="fas fa-credit-card"></i> إتمام الشراء
+        </button>
+      </div>
+    </div>
+
+    <!-- ============================================
+         نافذة إتمام الطلب
+         ============================================ -->
+    <div class="cart-modal" id="checkoutModal">
+      <div class="cart-content checkout-content">
+        <div class="cart-header">
+          <h2><i class="fas fa-truck"></i> معلومات التوصيل</h2>
+          <button id="closeCheckout" class="close-x">&times;</button>
+        </div>
+
+        <form id="checkoutForm">
+          <div class="form-group">
+            <label><i class="fas fa-user"></i> الاسم الكامل</label>
+            <input
+              type="text"
+              id="shipName"
+              required
+              placeholder="اسمك الكامل"
+            />
+          </div>
+
+          <div class="form-group">
+            <label><i class="fas fa-phone"></i> رقم الهاتف</label>
+            <input
+              type="tel"
+              id="shipPhone"
+              required
+              placeholder="01xxxxxxxxx"
+            />
+          </div>
+
+          <div class="form-group">
+            <label><i class="fas fa-map-marker-alt"></i> العنوان</label>
+            <textarea
+              id="shipAddress"
+              required
+              placeholder="العنوان بالتفصيل"
+              rows="2"
+            ></textarea>
+          </div>
+
+          <div class="form-group">
+            <label><i class="fas fa-city"></i> المدينة</label>
+            <input type="text" id="shipCity" required placeholder="القاهرة" />
+          </div>
+
+          <!-- حقل كوبون الخصم -->
+          <div class="coupon-section">
+            <label><i class="fas fa-ticket-alt"></i> كود الخصم (اختياري)</label>
+            <div class="coupon-input-group">
+              <input
+                type="text"
+                id="couponCode"
+                placeholder="أدخل كود الخصم"
+                style="text-transform: uppercase"
+              />
+              <button type="button" id="applyCouponBtn" onclick="applyCoupon()">
+                <i class="fas fa-check"></i> تطبيق
+              </button>
+            </div>
+            <div id="couponMessage" class="coupon-message"></div>
+          </div>
+
+          <div class="order-summary" id="orderSummary"></div>
+
+          <button type="submit" class="checkout-btn" id="confirmOrderBtn">
+            <i class="fas fa-check-circle"></i> تأكيد الطلب
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- ============================================
+         نافذة المفضلة
+         ============================================ -->
+    <div class="cart-modal" id="wishlistModal">
+      <div class="cart-content">
+        <div class="cart-header">
+          <h2><i class="fas fa-heart"></i> المفضلة</h2>
+          <button id="closeWishlist" class="close-x">&times;</button>
+        </div>
+        <div id="wishlistItems"></div>
+      </div>
+    </div>
+
+    <!-- إشعار -->
+    <div id="notification" class="notification"></div>
+
+    <!-- ============================================
+         Firebase SDKs (الترتيب مهم جداً!)
+         ============================================ -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-messaging-compat.js"></script>
+
+    <!-- Firebase Config -->
+    <script src="firebase-config.js"></script>
+
+    <!-- EmailJS -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script src="email-config.js"></script>
+    <script src="email.js"></script>
+
+    <!-- Site Logic -->
+    <script src="user.js"></script>
+    <script src="script.js"></script>
+    <script src="orders.js"></script>
+    <script src="phone-verify.js"></script>
+
+    <!-- Notifications -->
+    <script src="notifications.js"></script>
+
+    <!-- UI Enhancements -->
+    <script src="ui.js"></script>
+    <!-- Coupons -->
+    <script src="coupons.js"></script>
+  </body>
+</html>

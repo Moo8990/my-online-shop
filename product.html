@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>تفاصيل المنتج - متجري</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      .product-detail {
+        max-width: 1200px;
+        margin: 3rem auto;
+        padding: 0 5%;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 3rem;
+        background: white;
+        border-radius: 20px;
+        padding: 3rem;
+        box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
+      }
+
+      .product-detail img {
+        width: 100%;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+      }
+
+      .product-detail-info h1 {
+        font-size: 2rem;
+        color: #1a1a2e;
+        margin-bottom: 1rem;
+      }
+
+      .product-detail-info .rating {
+        font-size: 1.1rem;
+        margin-bottom: 1rem;
+      }
+
+      .product-detail-info .price {
+        font-size: 2rem;
+        color: #e94560;
+        font-weight: bold;
+        margin: 1.5rem 0;
+      }
+
+      .product-detail-info .description {
+        color: #666;
+        line-height: 1.8;
+        margin-bottom: 2rem;
+        font-size: 1.05rem;
+      }
+
+      .detail-actions {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+      }
+
+      .detail-actions button {
+        padding: 1rem 2rem;
+        border: none;
+        border-radius: 10px;
+        font-size: 1rem;
+        font-weight: bold;
+        cursor: pointer;
+        transition: transform 0.3s;
+        font-family: inherit;
+      }
+
+      .detail-actions button:hover {
+        transform: translateY(-3px);
+      }
+
+      .btn-primary {
+        background: linear-gradient(90deg, #17c3fc, #00b4fc);
+        color: white;
+        flex: 1;
+      }
+
+      .btn-secondary {
+        background: white;
+        color: #e94560;
+        border: 2px solid #e94560 !important;
+      }
+
+      .btn-secondary.active {
+        background: #e94560;
+        color: white;
+      }
+
+      .back-btn {
+        display: inline-block;
+        margin: 2rem 5%;
+        padding: 0.7rem 1.5rem;
+        background: #1a1a2e;
+        color: white;
+        text-decoration: none;
+        border-radius: 25px;
+        transition: transform 0.3s;
+      }
+
+      .back-btn:hover {
+        transform: translateX(5px);
+      }
+
+      .loading-product {
+        text-align: center;
+        padding: 5rem;
+        grid-column: 1/-1;
+      }
+
+      .loading-product i {
+        font-size: 3rem;
+        color: #667eea;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      @media (max-width: 768px) {
+        .product-detail {
+          grid-template-columns: 1fr;
+          padding: 1.5rem;
+          margin: 1rem auto;
+        }
+
+        .product-detail-info h1 {
+          font-size: 1.5rem;
+        }
+
+        .detail-actions {
+          flex-direction: column;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- شريط التنقل -->
+    <nav class="navbar">
+      <div class="logo"><i class="fas fa-store"></i> متجري</div>
+
+      <div class="nav-actions">
+        <div class="cart-icon" id="cartIcon">
+          <i class="fas fa-shopping-cart"></i>
+          <span id="cartCount">0</span>
+        </div>
+      </div>
+    </nav>
+
+    <!-- زر العودة -->
+    <a href="index.html" class="back-btn">
+      <i class="fas fa-arrow-right"></i> العودة للمتجر
+    </a>
+
+    <!-- تفاصيل المنتج -->
+    <div class="product-detail" id="productDetail">
+      <div class="loading-product">
+        <i class="fas fa-spinner"></i>
+        <p style="margin-top: 1rem; color: #999">جاري تحميل المنتج...</p>
+      </div>
+    </div>
+
+    <!-- إشعار -->
+    <div id="notification" class="notification"></div>
+
+    <!-- ============================================
+         Firebase SDKs
+         ============================================ -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+    <!-- إعدادات Firebase -->
+    <script src="firebase-config.js"></script>
+
+    <!-- منطق صفحة المنتج -->
+    <script src="product.js"></script>
+    <script src="ui.js"></script>
+  </body>
+</html>

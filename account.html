@@ -1,0 +1,728 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>حسابي - متجري</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      .account-page {
+        max-width: 1100px;
+        margin: 2rem auto;
+        padding: 0 5%;
+        display: grid;
+        grid-template-columns: 280px 1fr;
+        gap: 2rem;
+      }
+
+      /* الشريط الجانبي */
+      .account-sidebar {
+        background: white;
+        border-radius: 20px;
+        padding: 2rem 1.5rem;
+        box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+        height: fit-content;
+        position: sticky;
+        top: 100px;
+      }
+
+      .user-avatar-big {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 2.5rem;
+        font-weight: bold;
+        margin: 0 auto 1rem;
+        box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+      }
+
+      .user-name-sidebar {
+        text-align: center;
+        margin-bottom: 0.3rem;
+        color: #1a1a2e;
+        font-size: 1.2rem;
+      }
+
+      .user-email-sidebar {
+        text-align: center;
+        color: #999;
+        font-size: 0.85rem;
+        margin-bottom: 1.5rem;
+        direction: ltr;
+      }
+
+      .sidebar-nav {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      .sidebar-nav button {
+        width: 100%;
+        background: none;
+        border: none;
+        padding: 1rem;
+        border-radius: 12px;
+        cursor: pointer;
+        text-align: right;
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        font-size: 0.95rem;
+        font-family: inherit;
+        color: #666;
+        transition: all 0.3s;
+      }
+
+      .sidebar-nav button:hover {
+        background: #f8f9fa;
+        color: #667eea;
+      }
+
+      .sidebar-nav button.active {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+      }
+
+      .sidebar-nav button i {
+        width: 20px;
+        text-align: center;
+      }
+
+      /* المحتوى الرئيسي */
+      .account-content {
+        background: white;
+        border-radius: 20px;
+        padding: 2rem;
+        box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+        min-height: 500px;
+      }
+
+      .content-section {
+        display: none;
+        animation: fadeIn 0.3s;
+      }
+
+      .content-section.active {
+        display: block;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .section-title {
+        font-size: 1.5rem;
+        color: #1a1a2e;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .section-subtitle {
+        color: #999;
+        margin-bottom: 2rem;
+        font-size: 0.95rem;
+      }
+
+      /* نموذج */
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: #1a1a2e;
+        font-weight: 600;
+        font-size: 0.95rem;
+      }
+
+      .form-group input,
+      .form-group textarea {
+        width: 100%;
+        padding: 0.9rem 1rem;
+        border: 2px solid #e0e0e0;
+        border-radius: 12px;
+        font-size: 0.95rem;
+        font-family: inherit;
+        outline: none;
+        transition: border-color 0.3s;
+      }
+
+      .form-group input:focus,
+      .form-group textarea:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      }
+
+      .form-group input:disabled {
+        background: #f8f9fa;
+        color: #999;
+        cursor: not-allowed;
+      }
+
+      .btn-primary {
+        padding: 1rem 2rem;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-size: 1rem;
+        font-weight: bold;
+        cursor: pointer;
+        transition:
+          transform 0.3s,
+          box-shadow 0.3s;
+        font-family: inherit;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+      }
+
+      .btn-primary:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .btn-danger {
+        padding: 1rem 2rem;
+        background: #e94560;
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-size: 1rem;
+        font-weight: bold;
+        cursor: pointer;
+        transition: transform 0.3s;
+        font-family: inherit;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .btn-danger:hover {
+        transform: translateY(-2px);
+        background: #c73552;
+      }
+
+      .alert {
+        padding: 1rem;
+        border-radius: 12px;
+        margin-bottom: 1.5rem;
+        display: none;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .alert.show {
+        display: flex;
+      }
+
+      .alert-success {
+        background: #d4edda;
+        color: #155724;
+        border-right: 4px solid #28a745;
+      }
+
+      .alert-error {
+        background: #f8d7da;
+        color: #721c24;
+        border-right: 4px solid #dc3545;
+      }
+
+      /* الإحصائيات */
+      .stats-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+      }
+
+      .stat-card-mini {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 15px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        border-right: 5px solid #667eea;
+        transition: transform 0.3s;
+      }
+
+      .stat-card-mini:hover {
+        transform: translateY(-3px);
+      }
+
+      .stat-card-mini i {
+        font-size: 1.8rem;
+        color: #667eea;
+        margin-bottom: 0.5rem;
+      }
+
+      .stat-card-mini h3 {
+        font-size: 1.8rem;
+        color: #1a1a2e;
+        margin-bottom: 0.2rem;
+      }
+
+      .stat-card-mini p {
+        color: #999;
+        font-size: 0.9rem;
+      }
+
+      .stat-card-mini.green {
+        border-right-color: #28a745;
+      }
+      .stat-card-mini.green i {
+        color: #28a745;
+      }
+      .stat-card-mini.orange {
+        border-right-color: #ffc107;
+      }
+      .stat-card-mini.orange i {
+        color: #ffc107;
+      }
+
+      /* معلوماتي */
+      .info-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .info-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem;
+        background: #f8f9fa;
+        border-radius: 12px;
+      }
+
+      .info-row .label {
+        color: #666;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .info-row .label i {
+        color: #667eea;
+        width: 20px;
+      }
+
+      .info-row .value {
+        color: #1a1a2e;
+        font-weight: 600;
+        direction: ltr;
+      }
+
+      .badge-role {
+        padding: 0.3rem 0.8rem;
+        border-radius: 15px;
+        font-size: 0.8rem;
+        font-weight: 600;
+      }
+
+      .badge-role.admin {
+        background: #d4edda;
+        color: #155724;
+      }
+
+      .badge-role.customer {
+        background: #d1ecf1;
+        color: #0c5460;
+      }
+
+      /* حالة عدم الدخول */
+      .login-required {
+        text-align: center;
+        padding: 4rem 2rem;
+      }
+
+      .login-required i {
+        font-size: 4rem;
+        color: #ddd;
+        margin-bottom: 1.5rem;
+      }
+
+      .login-required h2 {
+        color: #1a1a2e;
+        margin-bottom: 1rem;
+      }
+
+      .login-required p {
+        color: #999;
+        margin-bottom: 2rem;
+      }
+
+      .login-required a {
+        display: inline-block;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        text-decoration: none;
+        padding: 1rem 2rem;
+        border-radius: 12px;
+        font-weight: bold;
+        transition: transform 0.3s;
+      }
+
+      .login-required a:hover {
+        transform: translateY(-3px);
+      }
+
+      /* استجابة */
+      @media (max-width: 900px) {
+        .account-page {
+          grid-template-columns: 1fr;
+        }
+
+        .account-sidebar {
+          position: static;
+        }
+
+        .sidebar-nav {
+          flex-direction: row;
+          overflow-x: auto;
+        }
+
+        .sidebar-nav button {
+          min-width: 140px;
+          justify-content: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- شريط التنقل -->
+    <nav class="navbar">
+      <div class="logo"><i class="fas fa-store"></i> متجري</div>
+
+      <div class="nav-actions">
+        <a href="index.html" class="login-link" style="text-decoration: none">
+          <i class="fas fa-home"></i> الرئيسية
+        </a>
+
+        <div class="cart-icon" id="cartIcon">
+          <i class="fas fa-shopping-cart"></i>
+          <span id="cartCount">0</span>
+        </div>
+
+        <div class="user-section" id="userSection">
+          <div class="user-menu hidden" id="userMenu">
+            <div class="user-info" id="userInfoBtn">
+              <i class="fas fa-user-circle"></i>
+              <span id="userName">مستخدم</span>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="user-dropdown" id="userDropdown">
+              <a href="account.html"> <i class="fas fa-user"></i> حسابي </a>
+              <a href="orders.html"> <i class="fas fa-box"></i> طلباتي </a>
+              <a href="admin.html" id="adminLink" class="hidden">
+                <i class="fas fa-cog"></i> لوحة التحكم
+              </a>
+              <a href="#" id="logoutBtn">
+                <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
+              </a>
+            </div>
+          </div>
+          <a href="login.html" class="login-link hidden" id="loginLink">
+            <i class="fas fa-sign-in-alt"></i> دخول
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- صفحة الحساب -->
+    <div class="account-page" id="accountPage" style="display: none">
+      <!-- الشريط الجانبي -->
+      <aside class="account-sidebar">
+        <div class="user-avatar-big" id="userAvatar">م</div>
+        <h3 class="user-name-sidebar" id="userNameSidebar">مستخدم</h3>
+        <p class="user-email-sidebar" id="userEmailSidebar">-</p>
+
+        <ul class="sidebar-nav">
+          <li>
+            <button class="nav-btn active" data-section="overview">
+              <i class="fas fa-user"></i> معلوماتي
+            </button>
+          </li>
+          <li>
+            <button class="nav-btn" data-section="edit">
+              <i class="fas fa-edit"></i> تعديل البيانات
+            </button>
+          </li>
+          <li>
+            <button class="nav-btn" data-section="address">
+              <i class="fas fa-map-marker-alt"></i> العنوان الافتراضي
+            </button>
+          </li>
+          <li>
+            <button class="nav-btn" data-section="password">
+              <i class="fas fa-lock"></i> كلمة المرور
+            </button>
+          </li>
+          <li>
+            <button class="nav-btn" data-section="stats">
+              <i class="fas fa-chart-line"></i> إحصائياتي
+            </button>
+          </li>
+          <li>
+            <a href="orders.html" style="text-decoration: none">
+              <button><i class="fas fa-box"></i> طلباتي</button>
+            </a>
+          </li>
+          <li>
+            <button id="sidebarLogout" style="color: #e94560">
+              <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
+            </button>
+          </li>
+        </ul>
+      </aside>
+
+      <!-- المحتوى -->
+      <main class="account-content">
+        <!-- قسم: معلوماتي -->
+        <section class="content-section active" id="section-overview">
+          <h2 class="section-title">
+            <i class="fas fa-user-circle" style="color: #667eea"></i>
+            معلوماتي
+          </h2>
+          <p class="section-subtitle">نظرة عامة على حسابك</p>
+
+          <div class="info-list" id="infoList">
+            <div class="info-row">
+              <span class="label"><i class="fas fa-user"></i> الاسم</span>
+              <span class="value" id="infoName">-</span>
+            </div>
+            <div class="info-row">
+              <span class="label"
+                ><i class="fas fa-envelope"></i> البريد الإلكتروني</span
+              >
+              <span class="value" id="infoEmail">-</span>
+            </div>
+            <div class="info-row">
+              <span class="label"
+                ><i class="fas fa-calendar"></i> تاريخ التسجيل</span
+              >
+              <span class="value" id="infoDate">-</span>
+            </div>
+            <div class="info-row">
+              <span class="label"
+                ><i class="fas fa-user-tag"></i> نوع الحساب</span
+              >
+              <span id="infoRole">-</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- قسم: تعديل البيانات -->
+        <section class="content-section" id="section-edit">
+          <h2 class="section-title">
+            <i class="fas fa-edit" style="color: #667eea"></i>
+            تعديل البيانات
+          </h2>
+          <p class="section-subtitle">حدّث اسمك المعروض</p>
+
+          <div class="alert alert-success" id="editSuccess"></div>
+          <div class="alert alert-error" id="editError"></div>
+
+          <form id="editForm">
+            <div class="form-group">
+              <label>الاسم الكامل</label>
+              <input type="text" id="editName" required minlength="2" />
+            </div>
+
+            <div class="form-group">
+              <label>البريد الإلكتروني</label>
+              <input type="email" id="editEmail" disabled />
+              <small
+                style="
+                  color: #999;
+                  font-size: 0.85rem;
+                  display: block;
+                  margin-top: 0.3rem;
+                "
+              >
+                <i class="fas fa-info-circle"></i> لا يمكن تغيير البريد
+                الإلكتروني
+              </small>
+            </div>
+
+            <button type="submit" class="btn-primary" id="saveEditBtn">
+              <i class="fas fa-save"></i> حفظ التعديلات
+            </button>
+          </form>
+        </section>
+
+        <!-- قسم: العنوان الافتراضي -->
+        <section class="content-section" id="section-address">
+          <h2 class="section-title">
+            <i class="fas fa-map-marker-alt" style="color: #667eea"></i>
+            العنوان الافتراضي
+          </h2>
+          <p class="section-subtitle">
+            سيُستخدم هذا العنوان تلقائياً عند الشراء
+          </p>
+
+          <div class="alert alert-success" id="addressSuccess"></div>
+          <div class="alert alert-error" id="addressError"></div>
+
+          <form id="addressForm">
+            <div class="form-group">
+              <label>الاسم الكامل</label>
+              <input type="text" id="addressName" placeholder="اسمك الكامل" />
+            </div>
+
+            <div class="form-group">
+              <label>رقم الهاتف</label>
+              <input type="tel" id="addressPhone" placeholder="01xxxxxxxxx" />
+            </div>
+
+            <div class="form-group">
+              <label>المدينة</label>
+              <input type="text" id="addressCity" placeholder="القاهرة" />
+            </div>
+
+            <div class="form-group">
+              <label>العنوان بالتفصيل</label>
+              <textarea
+                id="addressDetails"
+                rows="3"
+                placeholder="الشارع، المبنى، الشقة..."
+              ></textarea>
+            </div>
+
+            <button type="submit" class="btn-primary" id="saveAddressBtn">
+              <i class="fas fa-save"></i> حفظ العنوان
+            </button>
+          </form>
+        </section>
+
+        <!-- قسم: كلمة المرور -->
+        <section class="content-section" id="section-password">
+          <h2 class="section-title">
+            <i class="fas fa-lock" style="color: #667eea"></i>
+            تغيير كلمة المرور
+          </h2>
+          <p class="section-subtitle">احرص على استخدام كلمة مرور قوية</p>
+
+          <div class="alert alert-success" id="passwordSuccess"></div>
+          <div class="alert alert-error" id="passwordError"></div>
+
+          <form id="passwordForm">
+            <div class="form-group">
+              <label>كلمة المرور الحالية</label>
+              <input type="password" id="currentPassword" required />
+            </div>
+
+            <div class="form-group">
+              <label>كلمة المرور الجديدة</label>
+              <input type="password" id="newPassword" required minlength="6" />
+              <small
+                style="
+                  color: #999;
+                  font-size: 0.85rem;
+                  display: block;
+                  margin-top: 0.3rem;
+                "
+              >
+                6 أحرف على الأقل
+              </small>
+            </div>
+
+            <div class="form-group">
+              <label>تأكيد كلمة المرور الجديدة</label>
+              <input
+                type="password"
+                id="confirmPassword"
+                required
+                minlength="6"
+              />
+            </div>
+
+            <button type="submit" class="btn-primary" id="savePasswordBtn">
+              <i class="fas fa-key"></i> تغيير كلمة المرور
+            </button>
+          </form>
+        </section>
+
+        <!-- قسم: الإحصائيات -->
+        <section class="content-section" id="section-stats">
+          <h2 class="section-title">
+            <i class="fas fa-chart-line" style="color: #667eea"></i>
+            إحصائياتي
+          </h2>
+          <p class="section-subtitle">ملخص نشاطك في المتجر</p>
+
+          <div class="stats-cards">
+            <div class="stat-card-mini">
+              <i class="fas fa-shopping-bag"></i>
+              <h3 id="statTotalOrders">0</h3>
+              <p>إجمالي الطلبات</p>
+            </div>
+            <div class="stat-card-mini green">
+              <i class="fas fa-check-circle"></i>
+              <h3 id="statCompletedOrders">0</h3>
+              <p>طلبات مكتملة</p>
+            </div>
+            <div class="stat-card-mini orange">
+              <i class="fas fa-clock"></i>
+              <h3 id="statPendingOrders">0</h3>
+              <p>طلبات معلقة</p>
+            </div>
+            <div class="stat-card-mini">
+              <i class="fas fa-dollar-sign"></i>
+              <h3 id="statTotalSpent">$0</h3>
+              <p>إجمالي المشتريات</p>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- رسالة تسجيل الدخول -->
+    <div class="login-required" id="loginRequired" style="display: none">
+      <i class="fas fa-lock"></i>
+      <h2>يجب تسجيل الدخول</h2>
+      <p>سجل دخولك لعرض حسابك</p>
+      <a href="login.html"> <i class="fas fa-sign-in-alt"></i> تسجيل الدخول </a>
+    </div>
+
+    <div id="notification" class="notification"></div>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+    <script src="firebase-config.js"></script>
+    <script src="user.js"></script>
+    <script src="account.js"></script>
+    <script src="ui.js"></script>
+  </body>
+</html>
